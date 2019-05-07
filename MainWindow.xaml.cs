@@ -1,14 +1,13 @@
 ﻿namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
-    using System.IO;
-    using System.Windows;
-    using System.Windows.Media;
-    using Microsoft.Kinect;
-
     using Emgu.CV;
     using Emgu.CV.Structure;
+    using Microsoft.Kinect;
     using System;
+    using System.IO;
     using System.Runtime.InteropServices;
+    using System.Windows;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
 
@@ -258,16 +257,20 @@
             {
                 // Draw a transparent background to set the render size
                 dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+                //Only one scel can operate system
+                bool isScelTracked = false;
 
                 if (skeletons.Length != 0)
                 {
                     foreach (Skeleton skel in skeletons)
                     {
+                        if (isScelTracked) break;
                         RenderClippedEdges(skel, dc);
 
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
+                            isScelTracked = true;
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
                         {
@@ -322,37 +325,42 @@
             this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
             this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
 
-            // Render Joints
-            foreach (Joint joint in skeleton.Joints)
+            Joint rightHand = skeleton.Joints[JointType.HandRight];
+
+            Brush drawBrush = null;
+
+            //Hand has to be higher then
+            float downLimit = skeleton.Joints[JointType.ShoulderRight].Position.Y;
+
+            if (downLimit < rightHand.Position.Y)//|| joint.JointType == JointType.WristLeft)
             {
-                Brush drawBrush = null;
+                drawBrush = this.trackedJointBrush;
 
-                if (joint.JointType == JointType.HandRight )//|| joint.JointType == JointType.WristLeft)
-                {
-                    drawBrush = this.trackedJointBrush;
+                Point p = SkeletonPointToScreen(rightHand.Position);
 
-                    Point p = SkeletonPointToScreen(joint.Position);
+                hand.Update(p);
+                hand.Draw(My_Image);
 
-                    hand.Update(p);
-                    hand.Draw(My_Image);
-                    
-                    // NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
-                }
-
-                //if (joint.TrackingState == JointTrackingState.Tracked)
-                //{
-                //    drawBrush = this.trackedJointBrush;                    
-                //}
-                //else if (joint.TrackingState == JointTrackingState.Inferred)
-                //{
-                //    drawBrush = this.inferredJointBrush;                    
-                //}
-
-                if (drawBrush != null)
-                {
-                    drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
-                }
+                //NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
+            } else
+            {
+                hand.resetSmallRatius();
             }
+
+            //if (joint.TrackingState == JointTrackingState.Tracked)
+            //{
+            //    drawBrush = this.trackedJointBrush;                    
+            //}
+            //else if (joint.TrackingState == JointTrackingState.Inferred)
+            //{
+            //    drawBrush = this.inferredJointBrush;                    
+            //}
+
+            if (drawBrush != null)
+            {
+                drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(rightHand.Position), JointThickness, JointThickness);
+            }
+
 
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
             My_Image.SetZero();
