@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-namespace Microsoft.Samples.Kinect.SkeletonBasics
+﻿namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
     using System.IO;
     using System.Windows;
@@ -16,6 +10,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System;
     using System.Runtime.InteropServices;
     using System.Windows.Media.Imaging;
+
+
+    /// <summary>
+    /// Class for setting cursor position
+    /// </summary>
+    public partial class NativeMethods
+    {
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
+        [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int X, int Y);
+    }
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -87,8 +92,30 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         private DrawingImage imageSource;
 
+        /// <summary>
+        /// Emgu image for drawing
+        /// </summary>
         private Image<Gray, byte> My_Image;
 
+        /// <summary>
+        /// Custom class for hand gestures
+        /// </summary>
+        private Hand hand;
+
+        /// <summary>
+        /// Timer tick, unused
+        /// </summary>
+        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        void SetupDispatcher()
+        {
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            dispatcherTimer.Start();
+        }
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            //NativeMethods.SetCursorPos(100, 100);
+        }
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -96,7 +123,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         public MainWindow()
         {
             InitializeComponent();
-            //My_Image = new Image<Gray, byte>((int)imageSource.Width, (int)imageSource.Height, new Gray(100));
+            hand = new Hand(20);
         }
 
         /// <summary>
@@ -154,7 +181,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             // Display the drawing using our image control
             Image.Source = this.imageSource;
-
 
             My_Image = new Image<Gray, byte>((int)Image.Width, (int)Image.Height, new Gray(0));
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
@@ -296,21 +322,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
             this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
 
-            //System.Console.WriteLine(skeleton.ToString());
-
             // Render Joints
             foreach (Joint joint in skeleton.Joints)
             {
                 Brush drawBrush = null;
 
-                if (joint.JointType == JointType.WristRight || joint.JointType == JointType.WristLeft)
+                if (joint.JointType == JointType.HandRight )//|| joint.JointType == JointType.WristLeft)
                 {
                     drawBrush = this.trackedJointBrush;
+
                     Point p = SkeletonPointToScreen(joint.Position);
 
-                    CvInvoke.Circle(My_Image, new System.Drawing.Point((int)p.X, (int)p.Y), 2, new MCvScalar(255, 255, 255), -1);
-
-                    System.Console.WriteLine(string.Format("x: {0} y: {1}", p.X, p.Y));
+                    hand.Update(p);
+                    hand.Draw(My_Image);
+                    
+                    // NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
                 }
 
                 //if (joint.TrackingState == JointTrackingState.Tracked)
@@ -329,6 +355,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
+            My_Image.SetZero();
         }
 
         /// <summary>
