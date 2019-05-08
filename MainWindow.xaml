@@ -68,5 +68,7 @@
             </StatusBarItem>
         </StatusBar>
         <Image x:Name="imgBox" Height="567" Margin="613,0,-505,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="486"/>
+        <Label x:Name="label1" Content="Gest" HorizontalAlignment="Left" Margin="751,26,-409,-1" Grid.Row="2" VerticalAlignment="Top" Width="252" Grid.RowSpan="2" FontSize="64"/>
+        <Label x:Name="label2" Content="0" HorizontalAlignment="Left" Margin="613,23,-157,0" Grid.Row="2" VerticalAlignment="Top" Width="138" Height="97" FontSize="80" Grid.RowSpan="2"/>
     </Grid>
 </Window>

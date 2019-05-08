@@ -100,7 +100,7 @@
         /// Custom class for hand gestures
         /// </summary>
         private Hand hand;
-
+        private DabCounter dabCounter;
         /// <summary>
         /// Timer tick, unused
         /// </summary>
@@ -123,6 +123,7 @@
         {
             InitializeComponent();
             hand = new Hand(20);
+            dabCounter = new DabCounter();
         }
 
         /// <summary>
@@ -325,22 +326,59 @@
             this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
             this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
 
-            Joint rightHand = skeleton.Joints[JointType.HandRight];
+            //DAB COUNTER
+            dabCounter.Update(skeleton);
+            label2.Content = dabCounter.dabCounter;
+
+            Joint handJoint;
+            float downLimit;
+
+            if (skeleton.Joints[JointType.HandLeft].Position.Y > skeleton.Joints[JointType.HandRight].Position.Y) 
+            {
+                handJoint = skeleton.Joints[JointType.HandLeft];
+                downLimit = skeleton.Joints[JointType.ElbowLeft].Position.Y;
+            }
+            else
+            {
+                handJoint = skeleton.Joints[JointType.HandRight];
+                downLimit = skeleton.Joints[JointType.ElbowRight].Position.Y;
+            }
 
             Brush drawBrush = null;
 
             //Hand has to be higher then
-            float downLimit = skeleton.Joints[JointType.ShoulderRight].Position.Y;
 
-            if (downLimit < rightHand.Position.Y)//|| joint.JointType == JointType.WristLeft)
+            if (downLimit < handJoint.Position.Y)//|| joint.JointType == JointType.WristLeft)
             {
                 drawBrush = this.trackedJointBrush;
 
-                Point p = SkeletonPointToScreen(rightHand.Position);
+                Point p = SkeletonPointToScreen(handJoint.Position);
 
                 hand.Update(p);
                 hand.Draw(My_Image);
 
+                Hand.Gesture g = hand.CheckForGesture();
+                switch(g)
+                {
+                    case Hand.Gesture.SWIPE_LEFT:
+                        label1.Content = "Left";
+                        break;
+                    case Hand.Gesture.SWIPE_RIGTH:
+                        label1.Content = "Right";
+                        break;
+                    case Hand.Gesture.SWIPE_UP:
+                        label1.Content = "Up";
+                        break;
+                    case Hand.Gesture.SWIPE_DOWN:
+                        label1.Content = "Down";
+                        
+                        break;
+                    default:
+                        break;
+                }
+
+
+                
                 //NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
             } else
             {
@@ -358,7 +396,7 @@
 
             if (drawBrush != null)
             {
-                drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(rightHand.Position), JointThickness, JointThickness);
+                drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(handJoint.Position), JointThickness, JointThickness);
             }
 
 
