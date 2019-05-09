@@ -19,6 +19,7 @@ namespace KinectHandTracking
         [DllImport("gdi32")]
         private static extern int DeleteObject(IntPtr o);
 
+        [CLSCompliant(false)]
         public static BitmapSource ToBitmapSource(IImage image)
         {
             using (System.Drawing.Bitmap source = image.Bitmap)

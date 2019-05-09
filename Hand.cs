@@ -165,6 +165,7 @@ namespace KinectHandTracking
             return Gesture.NULL;
         }
 
+        [CLSCompliant(false)]
         public void Draw(Image<Gray, byte> image)
         {
             CvInvoke.Circle(image, ConvertPoint( LastPoint() ), (int)radiusBig, new MCvScalar(150, 150, 150));
