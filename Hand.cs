@@ -55,9 +55,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         public void Update(Point p)
         {
-            //Gesture g = CheckForGesture();
-            
-
             double dist = distance(p, LastPoint());
             if(dist <= minDistance)
             {
@@ -98,6 +95,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
             return new Point(sumX / amount, sumY / amount);
         }
+
         public Point ArithmeticAverage(int val = 3)
         {
             int amount = 0;
@@ -111,12 +109,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 amount++;
             }
             return new Point(sumX / amount, sumY / amount);
-        }
-
-
-        void logGesture(double ang)
-        {
-            //Console.WriteLine(ang);
         }
 
         private float XYToDegrees(Point xy, Point origin)
@@ -147,10 +139,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 checkingForGesture = false;
 
                 double angle = XYToDegrees(LastPoint(), points[points.Count - 5]);
-               // System.Diagnostics.Debug.WriteLine("A= " + angle);
                 if (angle <= 180+45 && angle > 180-45)
                 {
-                    //System.Media.SystemSounds.Asterisk.Play();
                     return Gesture.SWIPE_LEFT;
                 }
                 else if(angle <= 45 || angle > 360 - 45)

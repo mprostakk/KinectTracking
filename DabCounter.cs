@@ -8,8 +8,6 @@ using System.Windows;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
-    
-
     class DabCounter
     {
         bool rightDabFound;
@@ -22,7 +20,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         Joint rightShoulder;
         Joint leftShoulder;
         public int dabCounter;
-
 
         public DabCounter()
         {
@@ -47,7 +44,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 checkingForRightDab();
                 checkingForLeftDab();
-            } else if (leftDabFound)
+            }
+            else if (leftDabFound)
             {
                 if (checkingForRightDab())
                 {
@@ -55,7 +53,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     rightDabFound = true;
                     dabCounter++;
                 }
-            } else if (rightDabFound)
+            }
+            else if (rightDabFound)
             {
                 if (checkingForLeftDab())
                 {
@@ -64,14 +63,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     dabCounter++;
                 }
             }
-            
-
         }
 
         public void Draw(Image<Emgu.CV.Structure.Gray, byte> image)
         {
-            //Point p1 = rightHand;
-            //CvInvoke.ArrowedLine(image, )
         }
 
         private void logs()
@@ -140,6 +135,5 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             return (float)(180.0 - degreeAngle);
         }
-        
     }
 }
