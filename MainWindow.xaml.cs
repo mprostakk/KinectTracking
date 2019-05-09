@@ -268,7 +268,7 @@
                         if (isScelTracked) break;
                         RenderClippedEdges(skel, dc);
 
-                        if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                        if ( skel.TrackingState == SkeletonTrackingState.Tracked )
                         {
                             this.DrawBonesAndJoints(skel, dc);
                             isScelTracked = true;

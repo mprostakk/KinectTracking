@@ -85,10 +85,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private bool checkingForRightDab()
         {
-           bool przedramieR = (XYToDegrees(rightHand.Position, rightElbow.Position) > 310 &&
-                XYToDegrees(rightHand.Position, rightElbow.Position) <= 345);
-            bool bicepsR = XYToDegrees(rightElbow.Position, rightShoulder.Position) > 310 &&
-                XYToDegrees(rightElbow.Position, rightShoulder.Position) < 354;
+           bool przedramieR = (XYToDegrees(rightHand.Position, rightElbow.Position) > 290 &&
+                XYToDegrees(rightHand.Position, rightElbow.Position) <= 355);
+            bool bicepsR = XYToDegrees(rightElbow.Position, rightShoulder.Position) > 290 &&
+                XYToDegrees(rightElbow.Position, rightShoulder.Position) < 355;
             bool przedramieL = XYToDegrees(leftHand.Position, leftElbow.Position) > 310 &&
                 XYToDegrees(leftHand.Position, leftElbow.Position) < 360;
             bool bicepsL = XYToDegrees(leftElbow.Position, leftShoulder.Position) > 170 &&
@@ -113,8 +113,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 XYToDegrees(rightHand.Position, rightElbow.Position) <= 220);
             bool bicepsR = XYToDegrees(rightElbow.Position, rightShoulder.Position) > 0 &&
                 XYToDegrees(rightElbow.Position, rightShoulder.Position) < 100;
-            bool przedramieL = XYToDegrees(leftHand.Position, leftElbow.Position) > 170 &&
-                XYToDegrees(leftHand.Position, leftElbow.Position) < 245;
+            bool przedramieL = XYToDegrees(leftHand.Position, leftElbow.Position) > 160 &&
+                XYToDegrees(leftHand.Position, leftElbow.Position) < 255;
             bool bicepsL = XYToDegrees(leftElbow.Position, leftShoulder.Position) > 150 &&
                 XYToDegrees(leftElbow.Position, leftShoulder.Position) < 250;
             if (przedramieL && przedramieR && bicepsL && bicepsR)
