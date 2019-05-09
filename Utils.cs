@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics
+namespace KinectHandTracking
 {
     public static class Utils
     {

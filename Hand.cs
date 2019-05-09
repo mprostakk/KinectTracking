@@ -7,7 +7,7 @@ using System.Windows;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics
+namespace KinectHandTracking
 {
     public class Hand
     {

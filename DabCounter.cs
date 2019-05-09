@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics
+namespace KinectHandTracking
 {
     class DabCounter
     {

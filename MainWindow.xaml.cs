@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Samples.Kinect.SkeletonBasics
+﻿namespace KinectHandTracking
 {
     using Emgu.CV;
     using Emgu.CV.Structure;
