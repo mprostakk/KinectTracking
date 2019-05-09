@@ -1,0 +1,9 @@
+Przedramie R= 332.4052  BicepsR= 161.5137 PrzedramieL= 330.4225 BicepsR = 74.18522
+Przedramie R= 332.3773  BicepsR= 161.3749 PrzedramieL= 330.4635 BicepsR = 70.16869
+Przedramie R= 332.3889  BicepsR= 161.5091 PrzedramieL= 330.0715 BicepsR = 69.49534
+Przedramie R= 332.7814  BicepsR= 161.266 PrzedramieL= 330.073 BicepsR = 73.32278
+Przedramie R= 332.7854  BicepsR= 161.2656 PrzedramieL= 330.0443 BicepsR = 71.99584
+Przedramie R= 332.8045  BicepsR= 161.267 PrzedramieL= 330.2476 BicepsR = 71.09398
+Przedramie R= 332.8022  BicepsR= 161.4482 PrzedramieL= 330.333 BicepsR = 70.46745
+
+Lewy

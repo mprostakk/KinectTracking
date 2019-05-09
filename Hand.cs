@@ -17,6 +17,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         double minDistance;
         double rate;
         bool tracking;
+        bool wasTracking;
+
+        public enum Gesture { SWIPE_LEFT, SWIPE_RIGTH, SWIPE_DOWN, SWIPE_UP, NULL };
         
         public Hand(double radius = 5, double rate = 1, double minDistance = 100)
         {
@@ -27,6 +30,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.rate = rate;
             this.minDistance = minDistance;
             tracking = false;
+            wasTracking = false;
         }
 
         public Point LastPoint()
@@ -44,8 +48,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             return (Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
         }
 
+        public void resetSmallRatius()
+        {
+            radiusSmall = 0;
+        }
+
         public void Update(Point p)
         {
+            //Gesture g = CheckForGesture();
+            
+
             double dist = distance(p, LastPoint());
             if(dist <= minDistance)
             {
@@ -61,12 +73,106 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
             else
             {
+                wasTracking = tracking;
                 tracking = false;
                 radiusSmall -= rate * 2.5;
                 if (radiusSmall < 0)
                     radiusSmall = 0;
             }
             points.Add(p);
+            points[points.Count - 1] = ArithmeticAverage2(3);
+            
+        }
+
+        public Point ArithmeticAverage2(int val = 3)
+        {
+            int amount = 0;
+            double sumX = 0;
+            double sumY = 0;
+            for (int i = points.Count - 1; i >= 0 && i >= points.Count - 1 - val; i--)
+            {
+
+                sumX += points[i].X;
+                sumY += points[i].Y;
+                amount++;
+            }
+            return new Point(sumX / amount, sumY / amount);
+        }
+        public Point ArithmeticAverage(int val = 3)
+        {
+            int amount = 0;
+            double sumX = 0;
+            double sumY = 0;
+            for (int i = points.Count - 1; i >= 0 && i >= points.Count - 1 - val; i--)
+            {
+                
+                sumX += points[i].X - points[i - 1].X;
+                sumY += points[i].Y - points[i - 1].Y;
+                amount++;
+            }
+            return new Point(sumX / amount, sumY / amount);
+        }
+
+
+        void logGesture(double ang)
+        {
+            //Console.WriteLine(ang);
+        }
+
+        private float XYToDegrees(Point xy, Point origin)
+        {
+            double deltaX = origin.X - xy.X;
+            double deltaY = origin.Y - xy.Y;
+
+            double radAngle = Math.Atan2(deltaY, deltaX);
+            double degreeAngle = radAngle * 180.0 / Math.PI;
+
+            return (float)(180.0 - degreeAngle);
+        }
+
+        bool checkingForGesture = false;
+        int gestureCounter = 0;
+        public Gesture CheckForGesture()
+        {
+            if (!tracking)
+            {
+                if (wasTracking)
+                {
+                    checkingForGesture = true;
+                }
+            }
+            if(gestureCounter >= 5)
+            {
+                gestureCounter = 0;
+                checkingForGesture = false;
+
+                double angle = XYToDegrees(LastPoint(), points[points.Count - 5]);
+               // System.Diagnostics.Debug.WriteLine("A= " + angle);
+                if (angle <= 180+45 && angle > 180-45)
+                {
+                    //System.Media.SystemSounds.Asterisk.Play();
+                    return Gesture.SWIPE_LEFT;
+                }
+                else if(angle <= 45 || angle > 360 - 45)
+                {
+                    return Gesture.SWIPE_RIGTH;
+                }
+                else if (angle > 90 - 45 && angle <= 90 + 45)
+                {
+                    return Gesture.SWIPE_UP;
+                }
+                else if (angle > 270 - 45 && angle <= 270 + 45)
+                {
+                    return Gesture.SWIPE_DOWN;
+                }
+            }
+
+            if (checkingForGesture && !tracking)
+            {
+                gestureCounter++;
+            }
+
+            return Gesture.NULL;
         }
 
         public void Draw(Image<Gray, byte> image)

@@ -1,14 +1,13 @@
 ﻿namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
-    using System.IO;
-    using System.Windows;
-    using System.Windows.Media;
-    using Microsoft.Kinect;
-
     using Emgu.CV;
     using Emgu.CV.Structure;
+    using Microsoft.Kinect;
     using System;
+    using System.IO;
     using System.Runtime.InteropServices;
+    using System.Windows;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
 
@@ -101,7 +100,7 @@
         /// Custom class for hand gestures
         /// </summary>
         private Hand hand;
-
+        private DabCounter dabCounter;
         /// <summary>
         /// Timer tick, unused
         /// </summary>
@@ -124,6 +123,7 @@
         {
             InitializeComponent();
             hand = new Hand(20);
+            dabCounter = new DabCounter();
         }
 
         /// <summary>
@@ -258,16 +258,20 @@
             {
                 // Draw a transparent background to set the render size
                 dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+                //Only one scel can operate system
+                bool isScelTracked = false;
 
                 if (skeletons.Length != 0)
                 {
                     foreach (Skeleton skel in skeletons)
                     {
+                        if (isScelTracked) break;
                         RenderClippedEdges(skel, dc);
 
-                        if (skel.TrackingState == SkeletonTrackingState.Tracked)
+                        if ( skel.TrackingState == SkeletonTrackingState.Tracked )
                         {
                             this.DrawBonesAndJoints(skel, dc);
+                            isScelTracked = true;
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
                         {
@@ -322,37 +326,79 @@
             this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
             this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
 
-            // Render Joints
-            foreach (Joint joint in skeleton.Joints)
+            //DAB COUNTER
+            dabCounter.Update(skeleton);
+            label2.Content = dabCounter.dabCounter;
+
+            Joint handJoint;
+            float downLimit;
+
+            if (skeleton.Joints[JointType.HandLeft].Position.Y > skeleton.Joints[JointType.HandRight].Position.Y) 
             {
-                Brush drawBrush = null;
-
-                if (joint.JointType == JointType.HandRight )//|| joint.JointType == JointType.WristLeft)
-                {
-                    drawBrush = this.trackedJointBrush;
-
-                    Point p = SkeletonPointToScreen(joint.Position);
-
-                    hand.Update(p);
-                    hand.Draw(My_Image);
-                    
-                    // NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
-                }
-
-                //if (joint.TrackingState == JointTrackingState.Tracked)
-                //{
-                //    drawBrush = this.trackedJointBrush;                    
-                //}
-                //else if (joint.TrackingState == JointTrackingState.Inferred)
-                //{
-                //    drawBrush = this.inferredJointBrush;                    
-                //}
-
-                if (drawBrush != null)
-                {
-                    drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
-                }
+                handJoint = skeleton.Joints[JointType.HandLeft];
+                downLimit = skeleton.Joints[JointType.ElbowLeft].Position.Y;
             }
+            else
+            {
+                handJoint = skeleton.Joints[JointType.HandRight];
+                downLimit = skeleton.Joints[JointType.ElbowRight].Position.Y;
+            }
+
+            Brush drawBrush = null;
+
+            //Hand has to be higher then
+
+            if (downLimit < handJoint.Position.Y)//|| joint.JointType == JointType.WristLeft)
+            {
+                drawBrush = this.trackedJointBrush;
+
+                Point p = SkeletonPointToScreen(handJoint.Position);
+
+                hand.Update(p);
+                hand.Draw(My_Image);
+
+                Hand.Gesture g = hand.CheckForGesture();
+                switch(g)
+                {
+                    case Hand.Gesture.SWIPE_LEFT:
+                        label1.Content = "Left";
+                        break;
+                    case Hand.Gesture.SWIPE_RIGTH:
+                        label1.Content = "Right";
+                        break;
+                    case Hand.Gesture.SWIPE_UP:
+                        label1.Content = "Up";
+                        break;
+                    case Hand.Gesture.SWIPE_DOWN:
+                        label1.Content = "Down";
+                        
+                        break;
+                    default:
+                        break;
+                }
+
+
+                
+                //NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
+            } else
+            {
+                hand.resetSmallRatius();
+            }
+
+            //if (joint.TrackingState == JointTrackingState.Tracked)
+            //{
+            //    drawBrush = this.trackedJointBrush;                    
+            //}
+            //else if (joint.TrackingState == JointTrackingState.Inferred)
+            //{
+            //    drawBrush = this.inferredJointBrush;                    
+            //}
+
+            if (drawBrush != null)
+            {
+                drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(handJoint.Position), JointThickness, JointThickness);
+            }
+
 
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
             My_Image.SetZero();
