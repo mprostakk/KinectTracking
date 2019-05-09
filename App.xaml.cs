@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics
+namespace KinectHandTracking
 {
     using System.Windows;
 

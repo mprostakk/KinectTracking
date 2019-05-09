@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics.Properties
+namespace KinectHandTracking.Properties
 {
 
 
