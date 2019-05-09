@@ -92,7 +92,7 @@ namespace KinectHandTracking
             if(przedramieL && przedramieR && bicepsL && bicepsR)
             {
                 System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"F:\Pro\KinectTracking\wow.wav");
-                player.Play();
+                //player.Play();
                 rightDabFound = true;
                 return true;
             }
@@ -115,7 +115,7 @@ namespace KinectHandTracking
             if (przedramieL && przedramieR && bicepsL && bicepsR)
             {
                 System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"F:\Pro\KinectTracking\wow.wav");
-                player.Play();
+                //player.Play();
                 leftDabFound = true;
                 return true;
             }

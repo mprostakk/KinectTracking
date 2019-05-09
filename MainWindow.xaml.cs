@@ -44,7 +44,9 @@
         {
             My_Image = new Image<Gray, byte>((int)Image.Width, (int)Image.Height, new Gray(0));
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
-            
+
+            //CreateAnEllipse();
+
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
                 if (potentialSensor.Status == KinectStatus.Connected)
@@ -76,7 +78,30 @@
 
             skeletonDraw = new SkeletonDraw(sensor, Image);
         }
-        
+
+        ///<summary>    
+        /// Creates a blue ellipse with black border    
+        ///</summary>    
+        public void CreateAnEllipse()
+        {
+            // Create an Ellipse    
+            System.Windows.Shapes.Ellipse blueRectangle = new System.Windows.Shapes.Ellipse();
+            blueRectangle.Height = 100;
+            blueRectangle.Width = 200;
+            // Create a blue and a black Brush    
+            SolidColorBrush blueBrush = new SolidColorBrush();
+            blueBrush.Color = Colors.Blue;
+            SolidColorBrush blackBrush = new SolidColorBrush();
+            blackBrush.Color = Colors.Black;
+            // Set Ellipse's width and color    
+            blueRectangle.StrokeThickness = 4;
+            blueRectangle.Stroke = blackBrush;
+            // Fill rectangle with blue color    
+            blueRectangle.Fill = blueBrush;
+            // Add Ellipse to the Grid.    
+            layoutGrid.Children.Add(blueRectangle);
+        }
+
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (null != this.sensor)
@@ -167,8 +192,9 @@
                     default:
                         break;
                 }
-
-                //NativeMethods.SetCursorPos((int)p.X, (int)p.Y);
+                
+                Point p2 = hand.LastPoint();
+                NativeMethods.SetCursorPos((int)p2.X * 3, (int)(p2.Y * 2.25));
             }
             else
             {
@@ -184,6 +210,11 @@
         {
             DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         //CheckBoxSeatedModeChanged
