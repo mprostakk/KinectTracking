@@ -78,5 +78,7 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
+        <Canvas x:Name="canvas">
+        </Canvas>
     </Grid>
 </Window>

@@ -27,13 +27,20 @@
         void SetupDispatcher()
         {
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
             dispatcherTimer.Start();
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             //NativeMethods.SetCursorPos(100, 100);
-            
+            Point p = NativeMethods.GetMousePosition();
+            int x = (int)p.X;
+            int y = (int)p.Y;
+
+            double left = x;// - (1980 / 2);
+            double top = y;// - (1080 / 2);
+
+            mouseEllipse.Margin = new Thickness(left, top, 0, 0);
         }
 
         public MainWindow()
@@ -49,6 +56,7 @@
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
 
             CreateAnEllipse();
+            SetupDispatcher();
 
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
@@ -88,7 +96,7 @@
         public void CreateAnEllipse()
         {
             // Create an Ellipse    
-            //System.Windows.Shapes.Ellipse blueRectangle = new System.Windows.Shapes.Ellipse();
+            mouseEllipse = new System.Windows.Shapes.Ellipse();
             mouseEllipse.Height = 100;
             mouseEllipse.Width = 100;
             // Create a blue and a black Brush    
@@ -102,7 +110,8 @@
             // Fill rectangle with blue color    
             mouseEllipse.Fill = blueBrush;
             // Add Ellipse to the Grid.    
-            layoutGrid.Children.Add(mouseEllipse);
+            canvas.Children.Add(mouseEllipse);
+            //layoutGrid.Children.Add(mouseEllipse);
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -197,8 +206,15 @@
                 }
                 
                 Point p2 = hand.LastPoint();
-                NativeMethods.SetCursorPos((int)p2.X * 3, (int)(p2.Y * 2.25));
-                //mouseEllipse
+                int x = (int)(p2.X * 3);
+                int y = (int)(p2.Y * 2.25);
+
+                NativeMethods.SetCursorPos(x, y);
+
+                double left = x - (1980 / 2);
+                double top  = y - (1080 / 2);
+
+                mouseEllipse.Margin = new Thickness(left, top, 0, 0);
             }
             else
             {
