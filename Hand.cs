@@ -12,23 +12,15 @@ namespace KinectHandTracking
 {
     public class Hand
     {
-        private const UInt32 MOUSEEVENTF_LEFTDOWN = 0x0002;
-        private const UInt32 MOUSEEVENTF_LEFTUP = 0x0004;
-        [DllImport("user32.dll")]
-        private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, uint dwExtraInf);
-        public void btnSet_Click()
-        {
-            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);//make left button down
-            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);//make left button up
-            // tutaj jest mouse click
-        }
         List<Point> points;
-        double radiusSmall;
-        double radiusBig;
+        public double radiusSmall { get; set; }
+        public double radiusBig { get; }
         double minDistance;
         double rate;
         bool tracking;
         bool wasTracking;
+        bool isOnButton;
+        bool clicked;
 
         public enum Gesture { SWIPE_LEFT, SWIPE_RIGTH, SWIPE_DOWN, SWIPE_UP, NULL };
         
@@ -42,6 +34,8 @@ namespace KinectHandTracking
             this.minDistance = minDistance;
             tracking = false;
             wasTracking = false;
+            isOnButton = false;
+            clicked = false;
         }
 
         public Point LastPoint()
@@ -64,6 +58,21 @@ namespace KinectHandTracking
             radiusSmall = 0;
         }
 
+        public void CheckForButtonClick()
+        {
+            isOnButton = Convert.ToBoolean(Variables.getInstance().isHovering);
+            
+            if(isOnButton && tracking)
+            {
+                btnSet_Click();
+                clicked = true;
+            }
+            if(!isOnButton)
+            {
+                clicked = false;
+            }
+        }
+    
         public void Update(Point p)
         {
             double dist = distance(p, LastPoint());
@@ -89,7 +98,8 @@ namespace KinectHandTracking
             }
             points.Add(p);
             points[points.Count - 1] = ArithmeticAverage2(3);
-            
+
+            CheckForButtonClick();
         }
 
         public Point ArithmeticAverage2(int val = 3)
@@ -188,6 +198,16 @@ namespace KinectHandTracking
             {
                 CvInvoke.Circle(image, ConvertPoint( LastPoint() ), (int)radiusSmall, new MCvScalar(150, 150, 150), -1);
             }
+        }
+
+        private const UInt32 MOUSEEVENTF_LEFTDOWN = 0x0002;
+        private const UInt32 MOUSEEVENTF_LEFTUP = 0x0004;
+        [DllImport("user32.dll")]
+        private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, uint dwExtraInf);
+        public void btnSet_Click()
+        {
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
     }
 }

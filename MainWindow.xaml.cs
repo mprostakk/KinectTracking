@@ -8,8 +8,9 @@
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Input;
-    [CLSCompliant(false)]
+    using System.Windows.Threading;
 
+    [CLSCompliant(false)]
     public partial class MainWindow : Window
     {
         private KinectSensor sensor;
@@ -21,54 +22,24 @@
         private Hand hand;
         private DabCounter dabCounter;
         public System.Windows.Shapes.Ellipse mouseEllipse;
+        public System.Windows.Shapes.Ellipse mouseEllipseSmall;
 
-        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        DispatcherTimer dispatcherTimer;
+
         void SetupDispatcher()
         {
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
-            dispatcherTimer.Start();
         }
+
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             //NativeMethods.SetCursorPos(100, 100);
             //Point p = NativeMethods.GetMousePosition();
-            //int x = (int)p.X;
-            //int y = (int)p.Y;
-
-            //double left = x;// - (1980 / 2);
-            //double top = y;// - (1080 / 2);
-            if (mouseEllipse.StrokeThickness == 50)
-            {
-                hand.btnSet_Click();
-                mouseEllipse.StrokeThickness = 5;
-            }
-            else if (Variables.getInstance().isHovering == 1 && mouseEllipse.StrokeThickness != 100)
-            {
-                mouseEllipse.StrokeThickness +=0.5;
-            }
-
-            else
-            {
-                mouseEllipse.StrokeThickness = 5;
-            }
         }
 
-        public MainWindow()
+        private void SetupKinectSensor()
         {
-            InitializeComponent();
-            hand = new Hand(20);
-            dabCounter = new DabCounter();
-            this.Cursor = Cursors.None; // hide cursor
-        }
-
-        private void WindowLoaded(object sender, RoutedEventArgs e)
-        {
-            My_Image = new Image<Gray, byte>((int)Image.Width, (int)Image.Height, new Gray(0));
-            imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
-
-            CreateAnEllipse();
-            SetupDispatcher();
 
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
@@ -98,33 +69,64 @@
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
-
-            skeletonDraw = new SkeletonDraw(sensor, Image);
         }
 
-        ///<summary>    
-        /// Creates a blue ellipse with black border    
-        ///</summary>    
-        public void CreateAnEllipse()
+        public MainWindow()
         {
-            // Create an Ellipse    
-            mouseEllipse = new System.Windows.Shapes.Ellipse();
-            mouseEllipse.Height = 100;
-            mouseEllipse.Width = 100;
-            // Create a blue and a black Brush    
-            SolidColorBrush blueBrush = new SolidColorBrush();
-            blueBrush.Color = Colors.Blue;
-            SolidColorBrush blackBrush = new SolidColorBrush();
-            blackBrush.Color = Colors.Black;
-            // Set Ellipse's width and color    
-            mouseEllipse.StrokeThickness = 5;
-            mouseEllipse.Stroke = blackBrush;
+            InitializeComponent();   
+        }
 
-            // Fill rectangle with blue color    
-            mouseEllipse.Fill = blueBrush;
-            // Add Ellipse to the Grid.    
-            canvas.Children.Add(mouseEllipse);
-            //layoutGrid.Children.Add(mouseEllipse);
+        private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            this.Cursor = Cursors.None;
+
+            My_Image = new Image<Gray, byte>((int)Image.Width, (int)Image.Height, new Gray(0));
+            imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
+            dispatcherTimer = new DispatcherTimer();
+
+            hand = new Hand(20);
+            dabCounter = new DabCounter();
+
+            CreateAnEllipse(mouseEllipse);
+            CreateAnEllipse(mouseEllipseSmall);
+
+            mouseEllipse.Height = hand.radiusBig * 2;
+            mouseEllipse.Width = hand.radiusBig * 2;
+
+            mouseEllipseSmall.Height = hand.radiusBig * 2;
+            mouseEllipseSmall.Width = hand.radiusBig * 2;
+
+            SolidColorBrush GreenYellowBrush = new SolidColorBrush();
+            GreenYellowBrush.Color = Colors.GreenYellow;
+            SolidColorBrush WhiteBrush = new SolidColorBrush();
+            WhiteBrush.Color = Colors.White;
+
+            mouseEllipse.StrokeThickness = 1;
+            mouseEllipse.Stroke = WhiteBrush;
+
+            mouseEllipseSmall.Stroke = GreenYellowBrush;
+            mouseEllipseSmall.StrokeThickness = 1;
+
+
+            SetupDispatcher();
+            //dispatcherTimer.Start();
+            //mouseEllipse.
+            SetupKinectSensor();
+            skeletonDraw = new SkeletonDraw(sensor, Image);
+        }
+        
+        public void CreateAnEllipse(System.Windows.Shapes.Ellipse ellipse)
+        {
+            ellipse = new System.Windows.Shapes.Ellipse();
+            
+            //SolidColorBrush blueBrush = new SolidColorBrush();
+            //blueBrush.Color = Colors.Blue;
+            //SolidColorBrush blackBrush = new SolidColorBrush();
+            //blackBrush.Color = Colors.Black;
+            //ellipse.StrokeThickness = 5;
+            //ellipse.Stroke = blackBrush;
+            //ellipse.Fill = blueBrush;
+            //canvas.Children.Add(ellipse);
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -228,6 +230,7 @@
                 double top  = y;
 
                 mouseEllipse.Margin = new Thickness(left, top, 0, 0);
+                mouseEllipse.StrokeThickness = hand.radiusSmall;
             }
             else
             {
@@ -245,12 +248,15 @@
             return new Point(depthPoint.X, depthPoint.Y);
         }
 
-           /* button actions - obsluga przyciskow*/
+        /* button actions - obsluga przyciskow*/
 
+        int i = 0;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Button clicked");
-            button.Background = new SolidColorBrush(Colors.Green);
+            //Window.Background = new SolidColorBrush(Colors.Green);
+            button.Content = String.Format("Clicked {0}!", i);
+            i++;
 
         }
         public void btn_mouseEnter(object sender, RoutedEventArgs e)
