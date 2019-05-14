@@ -38,7 +38,7 @@
 
             //double left = x;// - (1980 / 2);
             //double top = y;// - (1080 / 2);
-            if (mouseEllipse.StrokeThickness == 100)
+            if (mouseEllipse.StrokeThickness == 50)
             {
                 hand.btnSet_Click();
                 mouseEllipse.StrokeThickness = 5;
@@ -59,7 +59,7 @@
             InitializeComponent();
             hand = new Hand(20);
             dabCounter = new DabCounter();
-            this.Cursor = Cursors.None; //          CURSOR HIDING 
+            this.Cursor = Cursors.None; // hide cursor
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
