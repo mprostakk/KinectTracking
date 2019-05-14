@@ -71,11 +71,11 @@ namespace KinectHandTracking
 
         private void logs()
         {
-            System.Diagnostics.Debug.WriteLine(
-                "Przedramie R= " + XYToDegrees(rightHand.Position,  rightElbow.Position) + 
-                " BicepsR= "     + XYToDegrees(rightElbow.Position, rightShoulder.Position) +
-                " PrzedramieL= " + XYToDegrees(leftHand.Position,   leftElbow.Position) +
-                " BicepsL = "    + XYToDegrees(leftElbow.Position,  leftShoulder.Position));
+        //    System.Diagnostics.Debug.WriteLine(
+        //        "Przedramie R= " + XYToDegrees(rightHand.Position,  rightElbow.Position) + 
+        //        " BicepsR= "     + XYToDegrees(rightElbow.Position, rightShoulder.Position) +
+        //        " PrzedramieL= " + XYToDegrees(leftHand.Position,   leftElbow.Position) +
+        //        " BicepsL = "    + XYToDegrees(leftElbow.Position,  leftShoulder.Position));
         }
 
         private bool checkingForRightDab()
