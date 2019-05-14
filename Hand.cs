@@ -12,7 +12,6 @@ namespace KinectHandTracking
 {
     public class Hand
     {
-        int clicked = 0;
         private const UInt32 MOUSEEVENTF_LEFTDOWN = 0x0002;
         private const UInt32 MOUSEEVENTF_LEFTUP = 0x0004;
         [DllImport("user32.dll")]
@@ -77,15 +76,11 @@ namespace KinectHandTracking
                 else
                 {
                     radiusSmall = radiusBig;
-                    // to do : check if clickable
-                    //System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"D:\wow.wav");
-                    //player.Play();
                     tracking = true;
                 }
             }
             else
             {
-                clicked = 0;
                 wasTracking = tracking;
                 tracking = false;
                 radiusSmall -= rate * 2.5;
