@@ -7,7 +7,7 @@
     using System.IO;
     using System.Windows;
     using System.Windows.Media;
-
+    using System.Windows.Input;
     [CLSCompliant(false)]
 
     public partial class MainWindow : Window
@@ -20,8 +20,7 @@
         private SkeletonDraw skeletonDraw;
         private Hand hand;
         private DabCounter dabCounter;
-
-        private System.Windows.Shapes.Ellipse mouseEllipse;
+        public System.Windows.Shapes.Ellipse mouseEllipse;
 
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         void SetupDispatcher()
@@ -33,14 +32,26 @@
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             //NativeMethods.SetCursorPos(100, 100);
-            Point p = NativeMethods.GetMousePosition();
-            int x = (int)p.X;
-            int y = (int)p.Y;
+            //Point p = NativeMethods.GetMousePosition();
+            //int x = (int)p.X;
+            //int y = (int)p.Y;
 
-            double left = x;// - (1980 / 2);
-            double top = y;// - (1080 / 2);
+            //double left = x;// - (1980 / 2);
+            //double top = y;// - (1080 / 2);
+            if (mouseEllipse.StrokeThickness == 100)
+            {
+                hand.btnSet_Click();
+                mouseEllipse.StrokeThickness = 5;
+            }
+            else if (Variables.getInstance().isHovering == 1 && mouseEllipse.StrokeThickness != 100)
+            {
+                mouseEllipse.StrokeThickness +=0.5;
+            }
 
-            mouseEllipse.Margin = new Thickness(left, top, 0, 0);
+            else
+            {
+                mouseEllipse.StrokeThickness = 5;
+            }
         }
 
         public MainWindow()
@@ -48,8 +59,9 @@
             InitializeComponent();
             hand = new Hand(20);
             dabCounter = new DabCounter();
+            this.Cursor = Cursors.None; //          CURSOR HIDING 
         }
-        
+
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             My_Image = new Image<Gray, byte>((int)Image.Width, (int)Image.Height, new Gray(0));
@@ -105,8 +117,9 @@
             SolidColorBrush blackBrush = new SolidColorBrush();
             blackBrush.Color = Colors.Black;
             // Set Ellipse's width and color    
-            mouseEllipse.StrokeThickness = 4;
+            mouseEllipse.StrokeThickness = 5;
             mouseEllipse.Stroke = blackBrush;
+
             // Fill rectangle with blue color    
             mouseEllipse.Fill = blueBrush;
             // Add Ellipse to the Grid.    
@@ -211,8 +224,8 @@
 
                 NativeMethods.SetCursorPos(x, y);
 
-                double left = x - (1980 / 2);
-                double top  = y - (1080 / 2);
+                double left = x;
+                double top  = y;
 
                 mouseEllipse.Margin = new Thickness(left, top, 0, 0);
             }
@@ -232,11 +245,25 @@
             return new Point(depthPoint.X, depthPoint.Y);
         }
 
+           /* button actions - obsluga przyciskow*/
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("Button clicked");
+            button.Background = new SolidColorBrush(Colors.Green);
 
         }
+        public void btn_mouseEnter(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("hover");
+            Variables.getInstance().isHovering = 1;
+        }
+        public void btn_mouseLeave(object sender, RoutedEventArgs e)
+        {
+             System.Diagnostics.Debug.WriteLine("leave hover");
+             Variables.getInstance().isHovering = 0;
 
+        }
         //CheckBoxSeatedModeChanged
     }
 }
