@@ -21,16 +21,26 @@
         private Hand hand;
         private DabCounter dabCounter;
 
+        private System.Windows.Shapes.Ellipse mouseEllipse;
+
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         void SetupDispatcher()
         {
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
             dispatcherTimer.Start();
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             //NativeMethods.SetCursorPos(100, 100);
+            Point p = NativeMethods.GetMousePosition();
+            int x = (int)p.X;
+            int y = (int)p.Y;
+
+            double left = x;// - (1980 / 2);
+            double top = y;// - (1080 / 2);
+
+            mouseEllipse.Margin = new Thickness(left, top, 0, 0);
         }
 
         public MainWindow()
@@ -45,7 +55,8 @@
             My_Image = new Image<Gray, byte>((int)Image.Width, (int)Image.Height, new Gray(0));
             imgBox.Source = BitmapSourceConvert.ToBitmapSource(My_Image);
 
-            //CreateAnEllipse();
+            CreateAnEllipse();
+            SetupDispatcher();
 
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
@@ -85,21 +96,22 @@
         public void CreateAnEllipse()
         {
             // Create an Ellipse    
-            System.Windows.Shapes.Ellipse blueRectangle = new System.Windows.Shapes.Ellipse();
-            blueRectangle.Height = 100;
-            blueRectangle.Width = 200;
+            mouseEllipse = new System.Windows.Shapes.Ellipse();
+            mouseEllipse.Height = 100;
+            mouseEllipse.Width = 100;
             // Create a blue and a black Brush    
             SolidColorBrush blueBrush = new SolidColorBrush();
             blueBrush.Color = Colors.Blue;
             SolidColorBrush blackBrush = new SolidColorBrush();
             blackBrush.Color = Colors.Black;
             // Set Ellipse's width and color    
-            blueRectangle.StrokeThickness = 4;
-            blueRectangle.Stroke = blackBrush;
+            mouseEllipse.StrokeThickness = 4;
+            mouseEllipse.Stroke = blackBrush;
             // Fill rectangle with blue color    
-            blueRectangle.Fill = blueBrush;
+            mouseEllipse.Fill = blueBrush;
             // Add Ellipse to the Grid.    
-            layoutGrid.Children.Add(blueRectangle);
+            canvas.Children.Add(mouseEllipse);
+            //layoutGrid.Children.Add(mouseEllipse);
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -194,7 +206,15 @@
                 }
                 
                 Point p2 = hand.LastPoint();
-                NativeMethods.SetCursorPos((int)p2.X * 3, (int)(p2.Y * 2.25));
+                int x = (int)(p2.X * 3);
+                int y = (int)(p2.Y * 2.25);
+
+                NativeMethods.SetCursorPos(x, y);
+
+                double left = x - (1980 / 2);
+                double top  = y - (1080 / 2);
+
+                mouseEllipse.Margin = new Thickness(left, top, 0, 0);
             }
             else
             {
