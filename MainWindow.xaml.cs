@@ -38,7 +38,7 @@
 
             //double left = x;// - (1980 / 2);
             //double top = y;// - (1080 / 2);
-            if (mouseEllipse.StrokeThickness == 100)
+            if (mouseEllipse.StrokeThickness == 50)
             {
                 hand.btnSet_Click();
                 mouseEllipse.StrokeThickness = 5;
