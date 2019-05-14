@@ -21,6 +21,7 @@ namespace KinectHandTracking
         {
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);//make left button down
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);//make left button up
+            // tutaj jest mouse click
         }
         List<Point> points;
         double radiusSmall;
