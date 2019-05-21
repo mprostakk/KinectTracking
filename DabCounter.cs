@@ -20,6 +20,7 @@ namespace KinectHandTracking
         Joint rightShoulder;
         Joint leftShoulder;
         public int dabCounter;
+        private int lastDab;
 
         public DabCounter()
         {
@@ -40,7 +41,15 @@ namespace KinectHandTracking
 
             logs();
 
-            if(!leftDabFound && !rightDabFound)
+            //After 10s check for left and right dab
+            int sForTwoDabs = 2;
+            if((int)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds - lastDab > sForTwoDabs)
+            {
+                leftDabFound = false;
+                rightDabFound = false;
+            }
+
+            if (!leftDabFound && !rightDabFound)
             {
                 checkingForRightDab();
                 checkingForLeftDab();
@@ -71,11 +80,13 @@ namespace KinectHandTracking
 
         private void logs()
         {
+            System.Diagnostics.Debug.WriteLine(lastDab);
+            /*
             System.Diagnostics.Debug.WriteLine(
                 "Przedramie R= " + XYToDegrees(rightHand.Position,  rightElbow.Position) + 
                 " BicepsR= "     + XYToDegrees(rightElbow.Position, rightShoulder.Position) +
                 " PrzedramieL= " + XYToDegrees(leftHand.Position,   leftElbow.Position) +
-                " BicepsL = "    + XYToDegrees(leftElbow.Position,  leftShoulder.Position));
+                " BicepsL = "    + XYToDegrees(leftElbow.Position,  leftShoulder.Position));*/
         }
 
         private bool checkingForRightDab()
@@ -91,8 +102,7 @@ namespace KinectHandTracking
             
             if(przedramieL && przedramieR && bicepsL && bicepsR)
             {
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"F:\Pro\KinectTracking\wow.wav");
-                //player.Play();
+                playWow();
                 rightDabFound = true;
                 return true;
             }
@@ -114,8 +124,7 @@ namespace KinectHandTracking
                 XYToDegrees(leftElbow.Position, leftShoulder.Position) < 250;
             if (przedramieL && przedramieR && bicepsL && bicepsR)
             {
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"F:\Pro\KinectTracking\wow.wav");
-                //player.Play();
+                playWow();
                 leftDabFound = true;
                 return true;
             }
@@ -134,6 +143,13 @@ namespace KinectHandTracking
             double degreeAngle = radAngle * 180.0 / Math.PI;
 
             return (float)(180.0 - degreeAngle);
+        }
+
+        private void playWow()
+        {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"F:\Pro\KinectTracking\wow.wav");
+            player.Play();
+            lastDab = (int)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds;
         }
     }
 }
