@@ -80,6 +80,12 @@
     <Compile Include="UserControlDab.xaml.cs">
       <DependentUpon>UserControlDab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControlInfo.xaml.cs">
+      <DependentUpon>UserControlInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlWeather.xaml.cs">
+      <DependentUpon>UserControlWeather.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +106,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControlDab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControlInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControlWeather.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,6 +166,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\maciek.mp4" />
+    <Resource Include="Images\Weather\iconfinder_03_moon_sleepy_night_emoticon_weather_smiley_3375686.png" />
+    <Resource Include="Images\Weather\iconfinder_05_cloud_smile_cloudy_emoticon_weather_smiley_3375695.png" />
+    <Resource Include="Images\Weather\iconfinder_06_rain_cloud_cry_emoticon_weather_smiley_3375694.png" />
+    <Resource Include="Images\Weather\iconfinder_07_sun_smile_happy_emoticon_weather_smiley_3375693.png" />
+    <Resource Include="Images\Weather\iconfinder_08_thunder_cloud_angry_emoticon_weather_smiley_3375692.png" />
+    <Resource Include="Images\Weather\iconfinder_10_snow_coud_emoticon_weather_smiley_3375690.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets" Condition="Exists('packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" />

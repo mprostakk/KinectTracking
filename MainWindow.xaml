@@ -107,7 +107,7 @@
     </Window.Resources>
     <Grid x:Name="mainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="101*"/>
+            <ColumnDefinition Width="100*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <Grid x:Name="userControlGrid" Grid.Column="0" Margin="0">
@@ -145,10 +145,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button x:Name="button10" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="0"/>
-            <Button x:Name="button11" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="1"/>
-            <Button x:Name="button12" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="2"/>
-            <Button x:Name="button13" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="3"/>
+            <Button x:Name="button_bus" Style="{StaticResource MyButtonStyle}" Content="Autobusy" Grid.Row="0" Click="Button_bus_Click"/>
+            <Button x:Name="button_dab" Style="{StaticResource MyButtonStyle}" Content="Dab" Grid.Row="1" Click="Button_dab_Click"/>
+            <Button x:Name="button_weather" Style="{StaticResource MyButtonStyle}" Content="Pogoda" Grid.Row="2" Click="Button_weather_Click"/>
+            <Button x:Name="button_info" Style="{StaticResource MyButtonStyle}" Content="Informacje" Grid.Row="3" Click="Button_info_Click"/>
 
 
         </Grid>
