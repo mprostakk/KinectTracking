@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Microsoft.Samples.Kinect.SkeletonBasics"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="768" d:DesignWidth="1366">
 
     <UserControl.Triggers>
         <EventTrigger RoutedEvent="UserControl.Loaded">
@@ -25,9 +25,9 @@
     </UserControl.Triggers>
 
     <Grid>
-        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="126,55,0,0" Stroke="Black" VerticalAlignment="Top" Width="100"/>
         <Label x:Name="label1" Content="Gest" HorizontalAlignment="Left" Margin="126,185,0,0" VerticalAlignment="Top" Width="252" FontSize="64"/>
         <Label x:Name="label2" Content="0" HorizontalAlignment="Left" Margin="297,168,0,0" VerticalAlignment="Top" Width="138" Height="97" FontSize="80"/>
+        <Image HorizontalAlignment="Left" Height="170" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Source="Images/bus.jpg"/>
 
     </Grid>
 </UserControl>

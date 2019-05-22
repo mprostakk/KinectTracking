@@ -165,7 +165,7 @@
             // Fill rectangle with blue color    
             mouseEllipse.Fill = blueBrush;
             // Add Ellipse to the Grid.    
-            canvas.Children.Add(mouseEllipse);
+            mainGrid.Children.Add(mouseEllipse);
             //layoutGrid.Children.Add(mouseEllipse);
         }
 
@@ -244,16 +244,16 @@
                 switch (g)
                 {
                     case Hand.Gesture.SWIPE_LEFT:
-                        ((UserControlDab)userControls[1]).label1.Content = "Left";
+                        ((UserControlAutobus)userControls[1]).label1.Content = "Left";
                         break;
                     case Hand.Gesture.SWIPE_RIGTH:
-                        ((UserControlDab)userControls[1]).label1.Content = "Right";
+                        ((UserControlAutobus)userControls[1]).label1.Content = "Right";
                         break;
                     case Hand.Gesture.SWIPE_UP:
-                        ((UserControlDab)userControls[1]).label1.Content = "Up";
+                        ((UserControlAutobus)userControls[1]).label1.Content = "Up";
                         break;
                     case Hand.Gesture.SWIPE_DOWN:
-                        ((UserControlDab)userControls[1]).label1.Content = "Down";
+                        ((UserControlAutobus)userControls[1]).label1.Content = "Down";
 
                         break;
                     default:
