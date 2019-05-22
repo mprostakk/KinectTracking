@@ -44,7 +44,115 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="{x:Type Button}" x:Key="MyButtonStyle">
+            <Setter Property="Button.Background">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF96CBFF" Offset="0"/>
+                        <GradientStop Color="#FF42FFDD" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            
+            <Setter Property="FontFamily" Value="Montserrat" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="30pt" />
+            <Setter Property="Foreground" Value="White" />
+            <Style.Triggers>
+                <!-- Animates the button's opacity on mouse over. -->
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                  Storyboard.TargetProperty="(Button.Opacity)"
+                  From="1.0" To="0.5" Duration="0:0:0.5" AutoReverse="True"
+                  RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+
+                <!-- Returns the button's opacity to 1 when the mouse leaves. -->
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                  Storyboard.TargetProperty="(Button.Opacity)"
+                  To="1" Duration="0:0:0.1" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+
+                <!-- Changes the button's color when clicked. 
+             Notice that the animation can't target the
+             SolidColorBrush used to paint the button's background
+             directly. The brush must be accessed through the button's
+             Background property. -->
+                <EventTrigger RoutedEvent="Button.Click">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation 
+                                Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                From="Orange" To="White" Duration="0:0:0.1" AutoReverse="True" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
+    <Grid>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="101*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="userControlGrid" Grid.Column="0" Margin="0">
+            <Grid Name="layoutGrid" Margin="10,0,0,0" HorizontalAlignment="Left" Width="594">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" Margin="0 0 0 20">
+                    <Image DockPanel.Dock="Left" Source="Images\Logo.png" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5"/>
+                    <Image Grid.Column="1" Source="Images\Status.png" Stretch="None" HorizontalAlignment="Center" Margin="0 0 0 5"/>
+                </DockPanel>
+                <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Center">
+                    <Image Name="Image" Width="490" Height="480" RenderTransformOrigin="0.296,0.498" HorizontalAlignment="Left"/>
+                </Viewbox>
+                <CheckBox Grid.Row="2" Style="{StaticResource SquareCheckBox}" Content="Seated Mode" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0 10 10 10" Name="checkBoxSeatedMode"/>
+                <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
+                    <StatusBarItem Padding="0 0 0 10">
+                        <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
+                    </StatusBarItem>
+                </StatusBar>
+                <Image x:Name="imgBox" Height="567" Margin="613,0,-505,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="486"/>
+                <Label x:Name="label3" Content="Gest" HorizontalAlignment="Left" Margin="266,512,0,0" Grid.Row="1" VerticalAlignment="Top" Width="252" Grid.RowSpan="3" FontSize="64"/>
+                <Canvas x:Name="canvas">
+                </Canvas>
+            </Grid>
+        </Grid>
+        <Grid Name="ControlsGrid" Grid.Column="1" Margin="0" RenderTransformOrigin="0.514,0.297">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Button x:Name="button10" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="0"/>
+            <Button x:Name="button11" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="1"/>
+            <Button x:Name="button12" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="2"/>
+            <Button x:Name="button13" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="3"/>
+
+
+        </Grid>
 
     <Grid Name="layoutGrid" Margin="10,0,0,0" HorizontalAlignment="Left" Width="594">
         <Grid.RowDefinitions>

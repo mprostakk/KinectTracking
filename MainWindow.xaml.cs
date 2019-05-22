@@ -3,9 +3,12 @@
     using Emgu.CV;
     using Emgu.CV.Structure;
     using Microsoft.Kinect;
+    using Microsoft.Samples.Kinect.SkeletonBasics;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Media;
     using System.Windows.Input;
     using System.Windows.Threading;
@@ -13,6 +16,7 @@
     [CLSCompliant(false)]
     public partial class MainWindow : Window
     {
+
         private KinectSensor sensor;
 
         private DrawingImage imageSource;
@@ -26,6 +30,10 @@
 
         DispatcherTimer dispatcherTimer;
 
+        private List<UserControl> userControls;
+        private int slideIndex = 0;
+
+        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         void SetupDispatcher()
         {
             dispatcherTimer.Tick += dispatcherTimer_Tick;
@@ -37,8 +45,62 @@
             //NativeMethods.SetCursorPos(100, 100);
             //Point p = NativeMethods.GetMousePosition();
         }
+        public MainWindow()
+        {
+            InitializeComponent();
+            //Ukrywanie wyświetlania debugowania
+            layoutGrid.Visibility = Visibility.Hidden;
 
+            userControls = new List<UserControl>();
+            UserControl autobusUC = new UserControlAutobus();
+            userControls.Add(autobusUC);
+            UserControl dabUC = new UserControlDab();
+            userControls.Add(dabUC);
+
+
+            userControlGrid.Children.Add(userControls[0]);
+            
+            hand = new Hand(20);
+            dabCounter = new DabCounter();
+
+            SetupSlideDispatcher();
+
+        }
+        System.Windows.Threading.DispatcherTimer dispatcherTimerSlide = new System.Windows.Threading.DispatcherTimer();
+        void SetupSlideDispatcher()
+        {
+            dispatcherTimerSlide.Tick += dispatcherTimer_SlideTick;
+            dispatcherTimerSlide.Interval = new TimeSpan(0, 0, 0, 3, 0);
+            dispatcherTimerSlide.Start();
+
+        }
+        private void dispatcherTimer_SlideTick(object sender, EventArgs e)
+        {
+
+            setSlideAuto();
+        }
+
+        private void setSlideAuto()
+        {
+
+            if (!dispatcherTimer.IsEnabled)
+            {
+                dispatcherTimer.Start();
+            }
+
+            userControlGrid.Children.RemoveAt(1);
+            slideIndex++;
+
+            if (slideIndex >= userControls.Count)
+                slideIndex = 0;
+
+
+            userControlGrid.Children.Add(userControls[slideIndex]);
+        }
+
+        private void WindowLoaded(object sender, RoutedEventArgs e)
         private void SetupKinectSensor()
+
         {
 
             foreach (var potentialSensor in KinectSensor.KinectSensors)
@@ -176,7 +238,7 @@
         {
             //Dab counter
             dabCounter.Update(skeleton);
-            label2.Content = dabCounter.dabCounter;
+            ((UserControlDab) userControls[1]).label2.Content = dabCounter.dabCounter;
 
             Joint handJoint;
             float downLimit;
@@ -204,16 +266,16 @@
                 switch (g)
                 {
                     case Hand.Gesture.SWIPE_LEFT:
-                        label1.Content = "Left";
+                        ((UserControlDab)userControls[1]).label1.Content = "Left";
                         break;
                     case Hand.Gesture.SWIPE_RIGTH:
-                        label1.Content = "Right";
+                        ((UserControlDab)userControls[1]).label1.Content = "Right";
                         break;
                     case Hand.Gesture.SWIPE_UP:
-                        label1.Content = "Up";
+                        ((UserControlDab)userControls[1]).label1.Content = "Up";
                         break;
                     case Hand.Gesture.SWIPE_DOWN:
-                        label1.Content = "Down";
+                        ((UserControlDab)userControls[1]).label1.Content = "Down";
 
                         break;
                     default:
