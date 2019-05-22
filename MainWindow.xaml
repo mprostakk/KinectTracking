@@ -1,7 +1,7 @@
 ﻿<Window x:Class="KinectHandTracking.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Skeleton Basics" Height="1080" Width="1980" Loaded="WindowLoaded" Closing="WindowClosing" WindowStartupLocation="CenterScreen" WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None">
+        Title="Skeleton Basics" Height="768" Width="1366" Loaded="WindowLoaded" Closing="WindowClosing" WindowStartupLocation="CenterScreen" WindowState="Maximized" ResizeMode="NoResize" WindowStyle="None">
 
     <Window.Resources>
         <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e"/>
@@ -53,7 +53,7 @@
                     </LinearGradientBrush>
                 </Setter.Value>
             </Setter>
-            
+
             <Setter Property="FontFamily" Value="Montserrat" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="FontSize" Value="30pt" />
@@ -105,10 +105,9 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid>
-        
+    <Grid x:Name="mainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="101*"/>
+            <ColumnDefinition Width="100*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
         <Grid x:Name="userControlGrid" Grid.Column="0" Margin="0">
@@ -146,47 +145,13 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button x:Name="button10" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="0"/>
-            <Button x:Name="button11" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="1"/>
-            <Button x:Name="button12" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="2"/>
-            <Button x:Name="button13" Style="{StaticResource MyButtonStyle}" Content="Button" Grid.Row="3"/>
+            <Button x:Name="button_bus" Style="{StaticResource MyButtonStyle}" Content="Autobusy" Grid.Row="0" Click="Button_bus_Click"/>
+            <Button x:Name="button_dab" Style="{StaticResource MyButtonStyle}" Content="Dab" Grid.Row="1" Click="Button_dab_Click"/>
+            <Button x:Name="button_weather" Style="{StaticResource MyButtonStyle}" Content="Pogoda" Grid.Row="2" Click="Button_weather_Click"/>
+            <Button x:Name="button_info" Style="{StaticResource MyButtonStyle}" Content="Informacje" Grid.Row="3" Click="Button_info_Click"/>
 
 
         </Grid>
 
-    <Grid Name="layoutGrid" Margin="10,0,0,0" HorizontalAlignment="Left" Width="594">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" Margin="0 0 0 20">
-            <Image DockPanel.Dock="Left" Source="Images\Logo.png" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5"/>
-            <Image Grid.Column="1" Source="Images\Status.png" Stretch="None" HorizontalAlignment="Center" Margin="0 0 0 5"/>
-        </DockPanel>
-        <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Center">
-            <Image Name="Image" Width="490" Height="480" RenderTransformOrigin="0.296,0.498" HorizontalAlignment="Left"/>
-        </Viewbox>
-        <CheckBox Grid.Row="2" Style="{StaticResource SquareCheckBox}" Content="Seated Mode" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0 10 10 10" Name="checkBoxSeatedMode"/>
-        <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
-            <StatusBarItem Padding="0 0 0 10">
-                <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
-            </StatusBarItem>
-        </StatusBar>
-        <Image x:Name="imgBox" Height="567" Margin="613,0,-505,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="486"/>
-        <Label x:Name="label1" Content="Gest" HorizontalAlignment="Left" Margin="751,26,-409,-1" Grid.Row="2" VerticalAlignment="Top" Width="252" Grid.RowSpan="2" FontSize="64"/>
-        <Label x:Name="label2" Content="0" HorizontalAlignment="Left" Margin="613,23,-157,0" Grid.Row="2" VerticalAlignment="Top" Width="138" Height="97" FontSize="80" Grid.RowSpan="2"/>
-        <Label x:Name="label3" Content="Gest" HorizontalAlignment="Left" Margin="266,512,0,0" Grid.Row="1" VerticalAlignment="Top" Width="252" Grid.RowSpan="3" FontSize="64"/>
-        <Button x:Name="button" Content="Click me!" HorizontalAlignment="Left" Margin="1432,0,-1261,0" VerticalAlignment="Top" Width="423" Height="224" IsDefault="True" ClickMode="Press" FontFamily="Montserrat" FontSize="72" Click="Button_Click" Foreground="White" MouseEnter="btn_mouseEnter" MouseLeave="btn_mouseLeave" Grid.Row="1">
-            <Button.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF96CBFF" Offset="0"/>
-                    <GradientStop Color="#FF42FFDD" Offset="1"/>
-                </LinearGradientBrush>
-            </Button.Background>
-        </Button>
-        <Canvas x:Name="canvas">
-        </Canvas>
     </Grid>
 </Window>
